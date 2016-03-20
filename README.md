@@ -1,4 +1,4 @@
-# iron-drag-drop
+# iron-drag-drop [![Build Status](https://travis-ci.org/jshcrowthe/iron-drag-drop.svg?branch=master)](https://travis-ci.org/jshcrowthe/iron-drag-drop)
 
 An element providing a starting point for your own reusable Polymer elements.
 
