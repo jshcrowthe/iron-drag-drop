@@ -6,6 +6,7 @@
   ],
   "description": "An element for creating a drag-n-drop region on the page",
   "keywords": [
+    "web-components",
     "web-component",
     "file",
     "files",
