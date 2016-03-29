@@ -1,4 +1,6 @@
-# iron-drag-drop [![Build Status](https://travis-ci.org/jshcrowthe/iron-drag-drop.svg?branch=master)](https://travis-ci.org/jshcrowthe/iron-drag-drop)
+[![Build Status](https://travis-ci.org/jshcrowthe/iron-drag-drop.svg?branch=master)](https://travis-ci.org/jshcrowthe/iron-drag-drop)
+[![Coverage Status](https://coveralls.io/repos/github/jshcrowthe/iron-drag-drop/badge.svg?branch=master)](https://coveralls.io/github/jshcrowthe/iron-drag-drop?branch=master)
+# iron-drag-drop 
 
 ### &lt;iron-drag-drop&gt;
 
