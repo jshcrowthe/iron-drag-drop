@@ -98,6 +98,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             assert.deepEqual(el.files, drop.dataTransfer.files);
             assert.equal(el.displayOverlay, false);
           });
+
+          test('should display overlay, handle dragleave, and clear overlay', function() {
+            var el = fixture('iron-drag-drop-fixture-overlay');
+            var dragenter = EventFactory('dragenter');
+            
+            // Simulate `dragenter` event
+            el.dispatchEvent(dragenter);
+
+            assert.equal(el.displayOverlay, true);
+
+            // Simulate `dragleave` event
+            var dragleave = EventFactory('dragleave');
+
+            // Ensure that the simulated mouse coordinates 
+            // are off the screen
+            dragleave.clientX = document.body.offsetWidth + 1;
+            dragleave.clientY = document.body.offsetHeight + 1;
+            
+            el.dispatchEvent(dragleave);
+
+            assert.equal(el.displayOverlay, false);
+          });
         });
 
       });
