@@ -31,21 +31,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <p>An example of <code>&lt;iron-drag-drop&gt;</code>:</p>
 
-    <iron-drag-drop>
-      <div overlay>
-        <h2>Overlay Content</h2>
-      </div>
-      <div id='drop-zone'>
-        <h1>Drop Files Here</h1>
-      </div>
-    </iron-drag-drop>
+    <template is='dom-bind' id='demo'>
+      <iron-drag-drop files='{{files}}'>
+        <div overlay>
+          <h2>Overlay Content</h2>
+        </div>
+        <div id='drop-zone'>
+          <h1>Drop Files Here</h1>
+        </div>
+      </iron-drag-drop>
+
+      <h2>Dropped Files:</h2>
+      <ul>
+        <template is='dom-repeat' items='[[files]]'>
+          <li>[[item.name]] - <em>[[item.type]] ([[formatSize(item.size)]])</em></li>
+        </template>  
+      </ul>
+    </template>
 
     <script>
-    var el = document.querySelector('iron-drag-drop');
-    el.addEventListener('files-changed', function(e) {
-      console.log('Files:', e.detail.value);
-    });
+      var app = document.querySelector('#demo');
+      app.formatSize = function(size) {
+        return (size / 1000).toFixed(2) + 'kb';
+      };
     </script>
-
   </body>
 </html>

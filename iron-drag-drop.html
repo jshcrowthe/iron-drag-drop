@@ -152,7 +152,10 @@ Custom property | Description | Default
           value: false
         },
         /**
-         * The files dropped 
+         * The files dropped on the drop area. 
+         * _NOTE: This is the files transferred in the
+         * `dataTransfer` object in the drop event.
+         * 
          * @type {Array}
          */
         files: {
@@ -160,8 +163,15 @@ Custom property | Description | Default
           value: function() { return []; },
           readOnly: true,
           notify: true
-        }
+        },
       },
+      /**
+       * A getter to determine if one of the immediate
+       * children (in the light DOM) has an attribute of
+       * `overlay`.
+       * 
+       * @return {Boolean} Existence of a valid overlay
+       */
       get _hasOverlay() {
         var children = Polymer.dom(this).children;
         return children.reduce(function(hasOverlay, child) {
@@ -169,19 +179,61 @@ Custom property | Description | Default
           return child.hasAttribute('overlay');
         }, false);
       },
+      /**
+       * Returns a class that will be applied to the draggable
+       * area based on whether or not the overlay should be 
+       * displayed
+       * 
+       * @param  {Boolean} displayOverlay The status of the 
+       * display of the overlay
+       * @return {String}                The class to be 
+       * applied to the DOM
+       */
       _draggingClass: function(displayOverlay) {
         return (displayOverlay ? 'dragging' : '');
       },
+      /**
+       * Returns a class that will be applied to the overlay
+       * area that will determine whether or not we should
+       * show or hide the overlay
+       * 
+       * @param  {Boolean} displayOverlay The status of the 
+       * display of the overlay
+       * @return {String}                The class to be 
+       * applied to the DOM
+       */
       _overlayClass: function(displayOverlay) {
         return 'overlay-' + (displayOverlay ? 'show' : 'hide');
       },
+      /**
+       * A required call to `preventDefault` for the `dragover`
+       * event.
+       * 
+       * @param  {Object} e The `dragover` event
+       */
       _handleDragover: function(e) {
         e.preventDefault();
       },
+      /**
+       * The start of the dragging state. This fires when something
+       * is dragged into the drop zone.
+       * 
+       * @param  {Object} e The `dragenter` event
+       */
       _handleDragenter: function(e) {
         e.preventDefault();
         this._setDragging(true);
       },
+
+      /**
+       * The end of the dragging state. This fires when something
+       * is dragged off of the drop zone. To ensure that we are
+       * turning the dragging state off at the right time, we 
+       * do a quick check of the coordinates of the event to 
+       * ensure we are out of the drop zone.
+       * 
+       * @param  {Object} e The `dragleave` event
+       */
       _handleDragleave: function(e) {
         e.preventDefault();
 
@@ -199,18 +251,23 @@ Custom property | Description | Default
         if (!e || !e.dataTransfer || !e.dataTransfer.files) return;
         e.preventDefault();
 
-        this._setFiles(Array.prototype.slice.call(e.dataTransfer.files));
+        // If we are passed a file set the files prop accordingly
+        if (e.dataTransfer.files.length) {
+          this._setFiles(Array.prototype.slice.call(e.dataTransfer.files));
+        } else if (this.files.length) {
+          // Unset the files if we weren't passed new files
+          // and the files array is currently populated
+          this._setFiles([]);
+        }
+
         this._setDragging(false);
       },
       _setDragging: function(val) {
         this._dragging = val;
-        // If `displayOverlay` is verify that we have 
+
+        // If `displayOverlay` is `true` verify that we have 
         // at least one DOM node with the attribute overlay
-        if (val) {
-          this.displayOverlay = this._hasOverlay;
-        } else {
-          this.displayOverlay = val;
-        }
+        this.displayOverlay = val ? this._hasOverlay : val;
       }
     });
   </script>
