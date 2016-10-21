@@ -61,8 +61,6 @@ Custom property | Description | Default
       :host {
         display: block;
         box-sizing: border-box;
-        --iron-drag-drop-border: 2px solid transparent;
-        --iron-drag-drop-border-dragging: 2px solid #B9B9B9;
       }
 
       .drop-zone {
@@ -71,11 +69,11 @@ Custom property | Description | Default
         width: 100%;
         z-index: 0;
         transition: border-color 0.25s;
-        border: var(--iron-drag-drop-border);
+        border: var(--iron-drag-drop-border, 2px solid transparent);
       }
 
       .drop-zone.dragging {
-        border: var(--iron-drag-drop-border-dragging);
+        border: var(--iron-drag-drop-border-dragging, 2px solid #B9B9B9);
       }
 
       /* Use this to prevent the dragleave
