@@ -70,6 +70,7 @@ Custom property | Description | Default
         z-index: 0;
         transition: border-color 0.25s;
         border: var(--iron-drag-drop-border, 2px solid transparent);
+        box-sizing: border-box;
       }
 
       .drop-zone.dragging {
@@ -199,6 +200,7 @@ Custom property | Description | Default
 
         this._setFiles(Array.prototype.slice.call(e.dataTransfer.files));
         this._setDragging(false);
+        this.fire('iron-drag-drop:files-dropped', e.dataTransfer.files);
       },
       _setDragging: function(val) {
         this._dragging = val;
