@@ -1,5 +1,6 @@
 language: node_js
-sudo: false
+sudo: required
+dist: trusty
 before_script:
   - npm install -g bower polylint web-component-tester istanbul coveralls git+https://github.com/thedeeno/web-component-tester-istanbul.git
   - bower install
