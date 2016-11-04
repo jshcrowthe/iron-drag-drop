@@ -1,0 +1,217 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+
+### &lt;iron-drag-drop&gt;
+
+An element for creating a drag-n-drop region on the page
+
+On its own, this element has **no DOM** it is used to
+wrap existing markup to create a droppable region
+
+Example:
+```html
+<iron-drag-drop>
+  <h2>Hello iron-drag-drop</h2>
+</iron-drag-drop>
+```
+
+You can also provide DOM to be used in an overlay that
+triggers when a file is dragged over the drop area. You
+do so by providing an element with the attribute `overlay`
+
+
+Example:
+```html
+<iron-drag-drop>
+  <div overlay>
+    <h1>This will only display when someone is dragging over the drop area</h1>
+  </div>
+  <h2>This will display ALL the time and constitutes the droppable area</h2>
+</iron-drag-drop>
+```
+
+### Styling
+`iron-drag-drop` provides several CSS mixins/properties to allow for customization of 
+different regions within the component.
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--iron-drag-drop-border` | The default border styles | `2px solid transparent`
+`--iron-drag-drop-border-dragging` | The border styles when a files is by dragged over the drop area | `2px solid #B9B9B9`
+`--iron-drag-drop-overlay` | A mixin that allows a user to customize the overlay area as they wish | `{}`
+`--iron-drag-drop-dropzone` | A mixin that allows a user to customize the drop area | `{}`
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="iron-drag-drop">
+  <template>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+      }
+
+      .drop-zone {
+        height: 100%;
+        position: relative;
+        width: 100%;
+        z-index: 0;
+        transition: border-color 0.25s;
+        border: var(--iron-drag-drop-border, 2px solid transparent);
+        @apply(--iron-drag-drop-dropzone);
+      }
+
+      .drop-zone.dragging {
+        border: var(--iron-drag-drop-border-dragging, 2px solid #B9B9B9);
+      }
+
+      /* Use this to prevent the dragleave
+       * event from firing when dragging over
+       * one of the content elements */
+      .drop-zone.dragging * {
+        pointer-events: none;
+      };
+
+      .overlay {
+        align-items: center;
+        background-color: rgba(236, 235, 234, 0.95);
+        bottom:0;
+        display: flex;
+        justify-content: center;
+        left:0;
+        position: absolute;
+        right:0;
+        top:0;
+        transition: opacity 0.25s;
+        @apply(--iron-drag-drop-overlay);
+      }
+      
+      .overlay-show {
+        z-index: 10;
+        opacity: 1;
+      }
+
+      .overlay-hide {
+        z-index: -1;
+        opacity: 0;
+      }
+
+    </style>
+    <div class$="drop-zone [[_draggingClass(_dragging)]]">
+      <div id='overlay' class$='overlay [[_overlayClass(displayOverlay)]]'>
+        <content select='[overlay]'></content>
+      </div>
+      <div id='content'>
+        <content></content>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'iron-drag-drop',
+      listeners: {
+        drop      : '_handleDrop',
+        dragenter : '_handleDragenter',
+        dragover  : '_handleDragover',
+        dragleave : '_handleDragleave'
+      },
+      properties: {
+        /**
+         * A variable to track whether there is
+         * content being dragged over the drag
+         * area. Different from `displayOverlay`
+         * as `displayOverlay`, if no `*[overlay]`
+         * is provided defaults to false.
+         * @type {Boolean}
+         */
+        _dragging: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * The state of whether or not the
+         * overlay is currently being displayed
+         * @type {Boolean}
+         */
+        displayOverlay: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * The files dropped 
+         * @type {Array}
+         */
+        files: {
+          type: Array,
+          value: function() { return []; },
+          readOnly: true,
+          notify: true
+        }
+      },
+      get _hasOverlay() {
+        var children = Polymer.dom(this).children;
+        return children.reduce(function(hasOverlay, child) {
+          if (hasOverlay) return hasOverlay;
+          return child.hasAttribute('overlay');
+        }, false);
+      },
+      _draggingClass: function(displayOverlay) {
+        return (displayOverlay ? 'dragging' : '');
+      },
+      _overlayClass: function(displayOverlay) {
+        return 'overlay-' + (displayOverlay ? 'show' : 'hide');
+      },
+      _handleDragover: function(e) {
+        e.preventDefault();
+      },
+      _handleDragenter: function(e) {
+        e.preventDefault();
+        this._setDragging(true);
+      },
+      _handleDragleave: function(e) {
+        e.preventDefault();
+
+        // Verify that the dragleave event was fired when
+        // the clientX/clientY were out of bounds
+        var boundingRect = this.getBoundingClientRect();
+        if (e.clientX <= boundingRect.left || 
+            e.clientX >= boundingRect.right ||
+            e.clientY <= boundingRect.top ||
+            e.clientY >= boundingRect.bottom) {
+          this._setDragging(false);
+        }
+      },
+      _handleDrop: function(e) {
+        if (!e || !e.dataTransfer || !e.dataTransfer.files) return;
+        e.preventDefault();
+
+        this._setFiles(Array.prototype.slice.call(e.dataTransfer.files));
+        this._setDragging(false);
+      },
+      _setDragging: function(val) {
+        this._dragging = val;
+        // If `displayOverlay` is verify that we have 
+        // at least one DOM node with the attribute overlay
+        if (val) {
+          this.displayOverlay = this._hasOverlay;
+        } else {
+          this.displayOverlay = val;
+        }
+      }
+    });
+  </script>
+</dom-module>

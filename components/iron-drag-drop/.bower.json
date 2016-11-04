@@ -1,0 +1,41 @@
+{
+  "name": "iron-drag-drop",
+  "authors": [
+    "Josh Crowther <jshcrowthe@gmail.com>"
+  ],
+  "description": "An element for creating a drag-n-drop region on the page",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "file",
+    "files",
+    "drag-n-drop",
+    "drag",
+    "drop",
+    "polymer"
+  ],
+  "main": "iron-drag-drop.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/jshcrowthe/iron-drag-drop/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  },
+  "_release": "1946efa56c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "1946efa56ce25b901adf55b6987e1c75fa53f924"
+  },
+  "_source": "https://github.com/jshcrowthe/iron-drag-drop.git",
+  "_target": "master",
+  "_originalSource": "https://github.com/jshcrowthe/iron-drag-drop.git",
+  "_direct": true
+}
