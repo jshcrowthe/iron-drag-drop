@@ -143,13 +143,14 @@ Custom property | Description | Default
           value: false
         },
         /**
-         * The state of whether or not the
-         * overlay is currently being displayed
+         * Whether or not the overlay 
+         * is currently being displayed
          * @type {Boolean}
          */
         displayOverlay: {
           type: Boolean,
-          value: false
+          value: false,
+          notify: true
         },
         /**
          * The files dropped 
@@ -204,8 +205,8 @@ Custom property | Description | Default
       },
       _setDragging: function(val) {
         this._dragging = val;
-        // If `displayOverlay` is verify that we have 
-        // at least one DOM node with the attribute overlay
+        // If `displayOverlay` is `true` verify that we have 
+        // at least one DOM node with the overlay attribute
         if (val) {
           this.displayOverlay = this._hasOverlay;
         } else {

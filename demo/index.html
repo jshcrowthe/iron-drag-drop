@@ -18,34 +18,72 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       window.Polymer = { dom: 'shadow' }
     </script>
     <link rel="import" href="../iron-drag-drop.html">
+    <link rel='import' href='../../iron-demo-helpers/demo-pages-shared-styles.html'>
+    <link rel='import' href='../../iron-demo-helpers/demo-snippet.html'>
+    <link rel='import' href='../../paper-toast/paper-toast.html'>
+    <style is="custom-style" include="demo-pages-shared-styles"></style>
     <style>
-      #drop-zone {
-        border: 1px dashed #a0a0a0;
-        border-radius: 4px;
-        padding: 15px;
-        text-align: center;
+      .centered {
+        max-width: 500px;
       }
     </style>
+
   </head>
   <body unresolved>
 
-    <p>An example of <code>&lt;iron-drag-drop&gt;</code>:</p>
+    <h4 class="centered">Basic usage</h4>
+    <demo-snippet class="centered">
+      <template>
+        <style>
+          #drop-zone {
+            border: 1px dashed #a0a0a0;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+          }
+        </style>
+        <iron-drag-drop>
+          <div id='drop-zone'>
+            <h1>Drop Files Here</h1>
+          </div>
+        </iron-drag-drop>
+      </template>
+    </demo-snippet>
 
-    <iron-drag-drop>
-      <div overlay>
-        <h2>Overlay Content</h2>
-      </div>
-      <div id='drop-zone'>
-        <h1>Drop Files Here</h1>
-      </div>
-    </iron-drag-drop>
-
-    <script>
-    var el = document.querySelector('iron-drag-drop');
-    el.addEventListener('files-changed', function(e) {
-      console.log('Files:', e.detail.value);
-    });
-    </script>
-
+    <h4 class="centered">Overlay usage</h4>
+    <demo-snippet class="centered">
+      <template>
+        <style>
+          #drop-zone {
+            border: 1px dashed #a0a0a0;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+          }
+        </style>
+        <iron-drag-drop>
+          <div overlay>
+            <h1>Overlay Content</h1>
+          </div>
+          <div id='drop-zone'>
+            <h1>Drop Files Here</h1>
+          </div>
+        </iron-drag-drop>
+      </template>
+    </demo-snippet>
+    <paper-toast id='toast' duration='4500'></paper-toast>
+  <script>
+    setTimeout(() => {
+      const toast = document.querySelector('#toast');
+      const dropZones = Array.from(document.querySelectorAll('iron-drag-drop'));
+      dropZones.forEach(el => {
+        el.addEventListener('files-changed', e => {
+          if (!e || !e.detail || !e.detail.value) return;
+          toast.text = `${e.detail.value.length} file(s) dropped on dropzone`;
+          toast.open();
+        });
+      });
+    }, 0);
+  </script>
   </body>
 </html>
