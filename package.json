@@ -20,7 +20,7 @@
     "bower": "^1.8.0",
     "coveralls": "^2.11.15",
     "istanbul": "^0.4.5",
-    "web-component-tester": "^5.0.0",
+    "web-component-tester": "^4.3.5",
     "web-component-tester-istanbul": "git+https://github.com/thedeeno/web-component-tester-istanbul.git"
   }
 }
